@@ -9,7 +9,7 @@ def read(filename):
 
 setup(
     name="omnitransform",
-    version="0.0.1",
+    version="0.1.0",
     author="Martin Kjellberg",
     author_email="martin.kjellberg@mu.st",
     description=(""),

@@ -1,0 +1,6 @@
+README.rst
+setup.py
+omnitransform/omnitransform.egg-info/PKG-INFO
+omnitransform/omnitransform.egg-info/SOURCES.txt
+omnitransform/omnitransform.egg-info/dependency_links.txt
+omnitransform/omnitransform.egg-info/top_level.txt

@@ -1,0 +1,12 @@
+Metadata-Version: 1.2
+Name: omnitransform
+Version: 0.0.1
+Summary: UNKNOWN
+Home-page: UNKNOWN
+Author: Martin Kjellberg
+Author-email: martin.kjellberg@mu.st
+License: BSD
+Description: Omnitransform is a tool for converting a Python dictionary to CSV or XLSX.
+        
+Platform: UNKNOWN
+Requires-Python: >=3.7

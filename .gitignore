@@ -1,3 +1,4 @@
 ﻿.python-version
 .vscode/
 *.pyc
+*.egg-info/

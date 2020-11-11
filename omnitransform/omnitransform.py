@@ -41,6 +41,7 @@ class Transform:
         output_list += self.body
         tmp = io.StringIO()
         writer = csv.writer(tmp).writerows(output_list)
+        tmp.seek(0)
         return tmp
 
     def _output_xlsx(self):
@@ -54,10 +55,13 @@ class Transform:
         ws.append(self.headers)
         for row in self.body:
             ws.append(row)
-        with NamedTemporaryFile(mode='rb+') as tmpfile:
-            wb.save(tmpfile.name)
-            tmpfile.seek(0)
-            return tmpfile
+        tmpfile = NamedTemporaryFile(mode='rb+')
+        # with NamedTemporaryFile(mode='rb+') as tmpfile:
+        wb.save(tmpfile.name)
+        tmpfile.seek(0)
+        tmp = io.BytesIO(tmpfile.read())
+        tmpfile.close()
+        return tmp
 
     def output(self):
         if self.output_format == 'csv':

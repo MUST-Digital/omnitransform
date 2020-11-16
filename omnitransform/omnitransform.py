@@ -4,6 +4,8 @@ from tempfile import NamedTemporaryFile
 
 from openpyxl import Workbook
 
+from django.http import HttpResponse
+
 
 class Transform:
     """
@@ -11,10 +13,10 @@ class Transform:
     output_format = 'csv', 'xlsx'
     output_method = 'object' or 'response'
     """
-    def __init__(self, input_dict, output_format, output_method):
+    def __init__(self, input_dict):
+        self.empty_value = ''
+        self.filename = ''
         self.data = input_dict
-        self.output_format = output_format
-        self.output_method = output_method
         self.headers = self._create_headers()
         self.body = self._create_body(self.headers)
 
@@ -27,11 +29,11 @@ class Transform:
         for data_row in self.data:
             row = []
             for h in headers:
-                row.append(data_row.get(h, ''))
+                row.append(data_row.get(h, self.empty_value))
             body_rows.append(row)
         return body_rows
 
-    def _output_csv(self):
+    def _generate_csv(self):
         """
         Returns a StringIO object
         Get the data using tmp.getvalue()
@@ -44,7 +46,7 @@ class Transform:
         tmp.seek(0)
         return tmp
 
-    def _output_xlsx(self):
+    def _generate_xlsx(self):
         """
         Returns a NamedTemporaryFile object
         Get the data using tmp.getvalue()
@@ -63,16 +65,46 @@ class Transform:
         tmpfile.close()
         return tmp
 
-    def output(self):
-        if self.output_format == 'csv':
-            return self._output_csv()
-        elif self.output_format == 'xlsx':
-            return self._output_xlsx()
+    def _response(self, obj, typeof):
+        if typeof == 'csv':
+            content_type = 'text/csv'
+        elif typeof == 'xlsx':
+            content_type = 'application/vnd.ms-excel'
         else:
-            raise NotImplementedError(f"output format {self.output_format} is not supported.")
+            raise NotImplementedError(f"'{typeof}' is not implemented")
 
-    def output_format_file(self):
-        pass
+        resp = HttpResponse(obj, content_type=content_type)
+        resp['Content-Disposition'] = f'attachment; filename="{self.filename}.{typeof}"'
+        return resp
+
+
+    # Public methods
+    # XLSX
+    def get_xlsx_response(self, filename, empty_value=''):
+        self.filename = filename
+        if empty_value:
+            self.empty_value = empty_value
+        obj = self._generate_xlsx()
+        response = self._response(obj, typeof='xlsx')
+        return response
+
+
+    def get_xlsx_obj(self):
+        return self._generate_xlsx()
+
+
+    # CSV
+    def get_csv_response(self, filename, empty_value=''):
+        self.filename = filename
+        if empty_value:
+            self.empty_value = empty_value
+        obj = self._generate_csv()
+        response = self._response(obj, typeof='csv')
+        return response
+
+
+    def get_csv_obj(self):
+        return self._generate_csv()
 
 
     def export_data(self, typeof):

@@ -17,7 +17,7 @@ setup(
     keywords="",
     url="",
     packages=find_packages('src'),
-    long_description=read('README.rst'),
+    long_description=read('README.md'),
     package_dir={'': 'omnitransform'},
     install_requires=['openpyxl==3.0.5'],
     python_requires='>=3.7',

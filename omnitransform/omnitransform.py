@@ -67,7 +67,7 @@ class Transform:
 
     def _response(self, obj, typeof):
         if typeof == 'csv':
-            content_type = 'text/csv'
+            content_type = 'text/csv; charset=utf-8-sig'
         elif typeof == 'xlsx':
             content_type = 'application/vnd.ms-excel'
         else:
